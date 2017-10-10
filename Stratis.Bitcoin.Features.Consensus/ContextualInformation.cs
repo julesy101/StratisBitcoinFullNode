@@ -7,68 +7,68 @@ namespace Stratis.Bitcoin.Features.Consensus
 {
     public class ContextBlockInformation
     {
+        public BlockHeader Header { get; set; }
+
+        public int Height { get; set; }
+
+        public DateTimeOffset MedianTimePast { get; set; }
+
         public ContextBlockInformation()
         {
-
         }
+
         public ContextBlockInformation(ChainedBlock bestBlock, NBitcoin.Consensus consensus)
         {
             Guard.NotNull(bestBlock, nameof(bestBlock));
-            
+
             this.Header = bestBlock.Header;
             this.Height = bestBlock.Height;
             this.MedianTimePast = bestBlock.GetMedianTimePast();
         }
-
-        public BlockHeader Header
-        {
-            get;
-            set;
-        }
-        public int Height
-        {
-            get;
-            set;
-        }
-        public DateTimeOffset MedianTimePast
-        {
-            get;
-            set;
-        }		
     }
 
     public class ContextStakeInformation
     {
-        public BlockStake BlockStake
-        {
-            get;
-            set;
-        }
+        public BlockStake BlockStake { get; set; }
 
-        public Money TotalCoinStakeValueIn
-        {
-            get;
-            set;
-        }
+        public Money TotalCoinStakeValueIn { get; set; }
 
-        public uint256 HashProofOfStake
-        {
-            get;
-            set;
-        }
+        public uint256 HashProofOfStake { get; set; }
 
-        public uint256 TargetProofOfStake
-        {
-            get;
-            set;
-        }
+        public uint256 TargetProofOfStake { get; set; }
     }
 
     public class ContextInformation
     {
+        public NBitcoin.Consensus Consensus { get; set; }
+
+        public DateTimeOffset Time { get; set; }
+
+        public ContextBlockInformation BestBlock { get; set; }
+
+        public ContextStakeInformation Stake { get; set; }
+
+        public Target NextWorkRequired { get; set; }
+
+        public BlockResult BlockResult { get; set; }
+
+        public DeploymentFlags Flags { get; set; }
+
+        public UnspentOutputSet Set { get; set; }
+
+        public bool CheckMerkleRoot { get; set; }
+
+        public bool CheckPow { get; set; }
+
+        public bool OnlyCheck { get; set; }
+
+        public bool IsPoS
+        {
+            get { return this.Stake != null; }
+        }
+
         public ContextInformation()
         {
-            
         }
 
         public ContextInformation(BlockResult blockResult, NBitcoin.Consensus consensus)
@@ -101,61 +101,5 @@ namespace Stratis.Bitcoin.Features.Consensus
                 BlockStake = new BlockStake(this.BlockResult.Block)
             };
         }
-
-        public bool IsPoS
-        {
-            get { return this.Stake != null; }
-        }
-
-        public NBitcoin.Consensus Consensus
-        {
-            get;
-            set;
-        }
-        public DateTimeOffset Time
-        {
-            get;
-            set;
-        }
-
-        public ContextBlockInformation BestBlock
-        {
-            get;
-            set;
-        }
-
-        public ContextStakeInformation Stake
-        {
-            get;
-            set;
-        }
-
-        public Target NextWorkRequired
-        {
-            get;
-            set;
-        }
-
-        public BlockResult BlockResult
-        {
-            get;
-            set;
-        }
-
-        public DeploymentFlags Flags
-        {
-            get;
-            set;
-        }
-
-        public UnspentOutputSet Set
-        {
-            get;
-            set;
-        }
-
-        public bool CheckMerkleRoot { get; set; }
-        public bool CheckPow { get; set; }
-        public bool OnlyCheck { get; set; }
     }
 }
