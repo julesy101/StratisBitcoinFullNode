@@ -183,6 +183,7 @@ namespace Stratis.Bitcoin.Features.Miner
                         services.AddSingleton<PowMining>();
                         services.AddSingleton<PosMinting>();
                         services.AddSingleton<AssemblerFactory, PosAssemblerFactory>();
+	                    services.AddSingleton<PowAssemblerFactory, PowAssemblerFactory>();
                         services.AddSingleton<MinerController>();
                         services.AddSingleton<MiningRPCController>();
                         services.AddSingleton<MinerSettings>(new MinerSettings(setup));
