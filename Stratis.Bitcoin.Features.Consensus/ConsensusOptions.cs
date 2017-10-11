@@ -12,9 +12,10 @@ namespace Stratis.Bitcoin.Features.Consensus
         {
             this.MAX_MONEY = long.MaxValue;
             this.COINBASE_MATURITY = 50;
+	        this.ProofOfWorkReward = Money.Coins(4);
         }
         
-        public new Money ProofOfWorkReward { get; set; } = Money.Coins(4);
+       // public new Money ProofOfWorkReward { get; set; } = Money.Coins(4);
 
         public Money ProofOfStakeReward { get; set; } = Money.COIN;
 

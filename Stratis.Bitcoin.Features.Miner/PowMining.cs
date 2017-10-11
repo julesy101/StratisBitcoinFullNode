@@ -58,7 +58,7 @@ namespace Stratis.Bitcoin.Features.Miner
             ConcurrentChain chain,
             Network network,
             IDateTimeProvider dateTimeProvider,
-            AssemblerFactory blockAssemblerFactory,
+            PowAssemblerFactory blockAssemblerFactory,
             IBlockRepository blockRepository,
             ChainState chainState,
             Signals.Signals signals,
