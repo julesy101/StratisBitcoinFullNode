@@ -80,7 +80,7 @@ namespace Stratis.Bitcoin.Features.Consensus
 
         public override void CheckBlockReward(ContextInformation context, Money nFees, ChainedBlock chainedBlock, Block block)
         {
-            this.logger.LogTrace("({0}:{1},{2}:'{3}')", nameof(nFees), nFees, nameof(chainedBlock), chainedBlock);
+            this.logger.LogTrace("({0}:{1},{2}:'{3}/{4}')", nameof(nFees), nFees, nameof(chainedBlock), chainedBlock.HashBlock, chainedBlock.Height);
 
             if (BlockStake.IsProofOfStake(block))
             {
@@ -210,9 +210,9 @@ namespace Stratis.Bitcoin.Features.Consensus
 
             if (coins.IsCoinstake)
             {
-                if ((nSpendHeight - coins.Height) < this.consensusOptions.CoinbaseMaturity)
+                if ((nSpendHeight - coins.Height) < this.consensusOptions.COINBASE_MATURITY)
                 {
-                    this.logger.LogTrace("Coinstake transaction height {0} spent at height {1}, but maturity is set to {2}.", coins.Height, nSpendHeight, this.consensusOptions.CoinbaseMaturity);
+                    this.logger.LogTrace("Coinstake transaction height {0} spent at height {1}, but maturity is set to {2}.", coins.Height, nSpendHeight, this.consensusOptions.COINBASE_MATURITY);
                     this.logger.LogTrace("(-)[COINSTAKE_PREMATURE_SPENDING]");
                     ConsensusErrors.BadTransactionPrematureCoinstakeSpending.Throw();
                 }
@@ -385,19 +385,23 @@ namespace Stratis.Bitcoin.Features.Consensus
             this.logger.LogTrace("()");
             context.SetStake();
 
-            if (context.Stake.BlockStake.IsProofOfWork())
-            {
-                if (context.CheckPow && !context.BlockResult.Block.Header.CheckProofOfWork())
-                {
-                    this.logger.LogTrace("(-)[HIGH_HASH]");
-                    ConsensusErrors.HighHash.Throw();
-                }
-            }
+	        if (context.Stake.BlockStake.IsProofOfWork())
+	        {
+		        if (context.CheckPow && !context.BlockResult.Block.Header.CheckProofOfWork())
+		        {
+			        this.logger.LogTrace("(-)[HIGH_HASH]");
+			        ConsensusErrors.HighHash.Throw();
+		        }
 
-            context.NextWorkRequired = StakeValidator.GetNextTargetRequired(this.stakeChain, context.BlockResult.ChainedBlock.Previous, context.Consensus,
-                context.Stake.BlockStake.IsProofOfStake());
-
-            this.logger.LogTrace("(-)[OK]");
+		        context.NextWorkRequired = context.BlockResult.ChainedBlock.GetWorkRequired(context.Consensus);
+	        }
+	        else
+	        {
+		        context.NextWorkRequired = StakeValidator.GetNextTargetRequired(this.stakeChain,
+			        context.BlockResult.ChainedBlock.Previous, context.Consensus,
+			        context.Stake.BlockStake.IsProofOfStake());
+	        }
+	        this.logger.LogTrace("(-)[OK]");
         }
 
         public void CheckAndComputeStake(ContextInformation context)
