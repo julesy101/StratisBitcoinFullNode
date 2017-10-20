@@ -7,7 +7,6 @@ namespace Stratis.Bitcoin.Features.Consensus
     // network this are network specific values
     public class PosConsensusOptions : PowConsensusOptions
     {
-        public new Money ProofOfWorkReward { get; set; }
 
         public Money ProofOfStakeReward { get; set; }
 
